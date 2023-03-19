@@ -12,5 +12,7 @@ namespace PracticeApi.Models
 
         public DbSet<TodoItem> TodoItems { get; set; } = null!;
         public DbSet<Hero> Heroes {get; set;} = null!;
+        public DbSet<CustomerType> CustomerTypes {get; set;} = null!;
+        public DbSet<Customer> Customers { get; set;} = null!;
     }
 }

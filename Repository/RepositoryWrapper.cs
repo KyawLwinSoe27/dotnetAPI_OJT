@@ -23,5 +23,31 @@ namespace PracticeApi.Repositories
                 return oHero;
             }
         }
+
+        private ICustomerTypeRepository? oCustomerType;
+        public ICustomerTypeRepository CustomerType
+        {
+            get
+            {
+                if(oCustomerType == null)
+                {
+                    oCustomerType = new CustomerTypeRepository(_repoContext);
+                }
+                return oCustomerType;
+            }
+        }
+
+        private ICustomerRepository? oCustomer;
+        public ICustomerRepository Customer
+        {
+            get
+            {
+                if(oCustomer == null)
+                {
+                    oCustomer = new CustomerRepository(_repoContext);
+                }
+                return oCustomer;
+            }
+        }
     }
 }

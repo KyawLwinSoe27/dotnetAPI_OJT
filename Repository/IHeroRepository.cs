@@ -6,7 +6,6 @@ namespace PracticeApi.Repositories
 
         Task<IEnumerable<HeroDTO>> SearchHero(string term);
         Task<IEnumerable<Hero>> SearchHeroMultiple(HeroDTO SearchObj);
-
         bool IsExists(long id);
     }
 }
