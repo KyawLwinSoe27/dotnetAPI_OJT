@@ -34,6 +34,7 @@ namespace PracticeApi.Controllers
         public async Task<ActionResult<CustomerType>> postCustomerType(CustomerType customerType)
         {
             await _repositoryWrapper.CustomerType.CreateAsync(customerType,true);
+            await _repositoryWrapper.EventLog.Insert(customerType);
             return CreatedAtAction("getCustomerTypeById",new{id = customerType.Id}, customerType);
         }
 
@@ -52,6 +53,8 @@ namespace PracticeApi.Controllers
                 objCustomerType.CustomerTypeName = customerType.CustomerTypeName;
                 objCustomerType.CustomerTypeDescription = customerType.CustomerTypeDescription;
                 await _repositoryWrapper.CustomerType.UpdateAsync(objCustomerType);
+                await _repositoryWrapper.EventLog.Update(objCustomerType);
+
                 return Ok(objCustomerType);
             }catch(DbUpdateConcurrencyException){
                 if(!isCustomerTypeExists(id))
@@ -71,6 +74,7 @@ namespace PracticeApi.Controllers
             {
                 return BadRequest();
             }
+            await _repositoryWrapper.EventLog.Delete(customerType);
             await _repositoryWrapper.CustomerType.DeleteAsync(customerType,true);
             return NoContent();
         }

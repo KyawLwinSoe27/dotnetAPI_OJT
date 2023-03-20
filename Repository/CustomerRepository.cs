@@ -44,6 +44,28 @@ namespace PracticeApi.Repositories
                             CustomerTypeName = e.customerType!.CustomerTypeName
                         })
                         .OrderBy(s => s.Id).ToListAsync();
+        }
+
+        public async Task<List<CustomerResult>> SearchCustomerCombo(string filter)
+        {
+            try {
+                ExpandoObject queryFilter = new();
+                queryFilter.TryAdd("@filter", "%" + filter + "%");
+                queryFilter.TryAdd("@filterid", filter);
+
+                var SelectQuery = @"SELECT c.customer_id AS ID, c.customer_name AS CustomerName, c.customer_register_date AS RegisterDate, c.customer_address AS CustomerAddress, c.customer_type_id AS CustomerTypeId, tbl_customer_type.customer_type_name AS CustomerTypeName
+                                    FROM tbl_customers c
+                                    INNER JOIN tbl_customer_type ON c.customer_type_id = tbl_customer_type.customer_type_id
+                                    WHERE c.customer_name LIKE @filter OR c.customer_id = @filterid
+                                    ORDER BY c.customer_name LIMIT 0, 5";
+
+                List<CustomerResult> custResult = await RepositoryContext.RunExecuteSelectQuery<CustomerResult>(SelectQuery, queryFilter);
+                return custResult;
+            }
+            catch (Exception ex) {
+                Log.Error("GetCustomerCombo fail "+ ex.Message);
+                return new List<CustomerResult>();
+            }
         }   
 
         public bool isExists(int id)

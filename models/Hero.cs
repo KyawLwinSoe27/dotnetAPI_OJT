@@ -1,6 +1,6 @@
 namespace PracticeApi.Models
 {
-    public class Hero
+    public class Hero : BaseModel
     {
         public int? HeroId {get; set;}
         public String? HeroName {get; set;}

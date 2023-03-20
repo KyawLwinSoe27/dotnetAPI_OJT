@@ -41,6 +41,7 @@ namespace PracticeApi.Controllers
                 CustomerTypeId = customerRequest.CustomerTypeId
             };
             await _repositoryWrapper.Customer.CreateAsync(customer,true);
+            await _repositoryWrapper.EventLog.Insert(customer);
             if(customerRequest.Photo != null && customerRequest.Photo != "")
             {
                 FileService.MoveTempFileDir("CustomerPhoto",customer.Id.ToString(),customerRequest.Photo);
@@ -70,6 +71,7 @@ namespace PracticeApi.Controllers
                 customer.CustomerTypeId = customerRequest.CustomerTypeId;
 
                 await _repositoryWrapper.Customer.UpdateAsync(customer);
+                await _repositoryWrapper.EventLog.Update(customer);
                 if(customerRequest.Photo != null && customerRequest.Photo != "")
                 {
                     // FileService.MoveTempFileDir("CustomerPhoto",customer.Id.ToString(),customerRequest.Photo);
@@ -95,7 +97,9 @@ namespace PracticeApi.Controllers
             {
                 return BadRequest();
             }
-            FileService.DeleteFileNameOnly("CustomerPhoto",customer.Id.ToString());
+            // FileService.DeleteFileNameOnly("CustomerPhoto",customer.Id.ToString());
+            FileService.DeleteDir("CustomerPhoto",customer.Id.ToString());
+            await _repositoryWrapper.EventLog.Delete(customer);
             await _repositoryWrapper.Customer.DeleteAsync(customer,true);
             return NoContent();
         }
@@ -111,6 +115,14 @@ namespace PracticeApi.Controllers
             var customerList = await _repositoryWrapper.Customer.ListCustomer();
             return Ok(customerList);
         }
+
+        [HttpPost("filter/{filter}")]
+        public async Task<ActionResult<IEnumerable<CustomerResult>>> SearchCustomerCombo(string filter)
+        {
+            var custList = await _repositoryWrapper.Customer.SearchCustomerCombo(filter);
+            return Ok(custList);
+        }
+
         private bool isCustomerExists(int id)
         {
             return _repositoryWrapper.Customer.isExists(id);

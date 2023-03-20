@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 using PracticeApi.Extensions;
 using PracticeApi.Repositories;
+using PracticeApi.CustomTokenAuthProvider;
 
 namespace PracticeApi
 {
@@ -24,6 +25,8 @@ namespace PracticeApi
             services.ConfigureCors(Configuration);
 
             services.ConfigureMySqlContext(Configuration);
+
+            services.AddTransient<TokenProviderMiddleware>();
 
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -73,6 +76,10 @@ namespace PracticeApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseAuthentication();
+
+            app.UseTokenProviderMiddleware();
 
             app.UseEndpoints(endpoints =>
             {

@@ -49,5 +49,58 @@ namespace PracticeApi.Repositories
                 return oCustomer;
             }
         }
+
+
+        private IAdminLevelRepository? oAdminLevel;
+        public IAdminLevelRepository AdminLevel
+        {
+            get
+            {
+                if(oAdminLevel == null)
+                {
+                    oAdminLevel = new AdminLevelRepository(_repoContext);
+                }
+                return oAdminLevel;
+            }
+        }
+
+        private IAdminRepository? oAdmin;
+        public IAdminRepository Admin
+        {
+            get
+            {
+                if(oAdmin == null)
+                {
+                    oAdmin = new AdminRepository(_repoContext);
+                }
+                return oAdmin;
+            }
+        }
+
+        private IOTPRepository? oOTP;
+        public IOTPRepository OTP
+        {
+            get
+            {
+                if(oOTP == null)
+                {
+                    oOTP = new OTPRepository(_repoContext);
+                }
+                return oOTP;
+            }
+        }
+
+        private IEventLogRepository? oEventLog;
+        public IEventLogRepository EventLog
+        {
+            get 
+            {
+                if(oEventLog == null)
+                {
+                    oEventLog = new EventLogRepository(_repoContext);
+                }
+                return oEventLog;
+            }
+        }
     }
 }

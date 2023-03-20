@@ -6,6 +6,7 @@ using PracticeApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using PracticeApi.Util;
+using PracticeApi.Models;
 
 namespace PracticeApi.Controllers
 {
@@ -156,7 +157,7 @@ namespace PracticeApi.Controllers
         }
     
         [HttpPost("Upload/TempDir")]
-        public async Task<string> FileUploadTempDir([FromForm] string tempdir)
+        public async Task<TempFilePayload> FileUploadTempDir([FromForm] string tempdir)
         {
             Response.ContentType = "application/json";
             try
@@ -204,7 +205,9 @@ namespace PracticeApi.Controllers
                         {
                             await file.CopyToAsync(fileStream);
                         }
-                        return tempdir;
+                        return new TempFilePayload {TempDir = Encryption.EncryptFileName(tempdir) , TempFile = Encryption.EncryptFileName(uploadfilename)};
+
+                        // return tempdir;
                     }
                     
                     throw new Exception("Empty File.");
@@ -217,7 +220,7 @@ namespace PracticeApi.Controllers
             {
                 Log.Error(ex.Message);  //never return or output file path exception to users, just output to log file
                 Response.StatusCode = 400;
-                return "Fail to Upload";
+                return new TempFilePayload();
             }
         }
     
@@ -263,7 +266,8 @@ namespace PracticeApi.Controllers
                         {
                             await file.CopyToAsync(fileStream);
                         }
-                        return filename;
+                        return Encryption.EncryptFileName(filename+"."+ ext.ToLower());
+                        // return filename;
                     }
                     
                     throw new Exception("Empty File.");
@@ -401,6 +405,11 @@ namespace PracticeApi.Controllers
             Response.ContentType = "application/json";
             try
             {
+                if(fileNames == null || fileNames == "")
+                    throw new Exception("Invalid File Name");
+                else 
+                    fileNames = Encryption.DecryptFileName(fileNames);
+
                 string uploadfilename = fileNames;
                 string ext = FileService.GetFileExtension(uploadfilename);
                
@@ -438,11 +447,22 @@ namespace PracticeApi.Controllers
     
 
         [HttpPost("Upload/TempRemoveDir")]
-        public string FileUploadTempRemoveDir([FromForm] string fileNames, [FromForm] string tempdir)
+        public string FileUploadTempRemoveDir([FromForm] string fileNames, [FromForm] string tempdir, [FromForm] string tempfile)
         {
             Response.ContentType = "application/json";
             try
             {
+                string encryptionFileName = "";
+                if(tempfile == null || tempfile == "")
+                    throw new Exception("Invalid temp file");
+                else 
+                    encryptionFileName = Encryption.DecryptFileName(tempfile);
+
+                if(encryptionFileName != fileNames)
+                    throw new Exception("Invalid Temp File");
+
+                tempdir = Encryption.DecryptFileName(tempdir);
+
                 string ext = FileService.GetFileExtension(fileNames);
                 
                 string fullPath = "";

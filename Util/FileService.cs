@@ -19,6 +19,8 @@ namespace PracticeApi.Util
         public static Boolean MoveTempFile(string functionname, string filename, string tempfilename)
         {
             string tempfolderPath = baseDirectory + _configuration.GetSection("appSettings:UploadTempPath").Value;
+
+            tempfilename = Encryption.DecryptFileName(tempfilename);
             
             if (!allowfunction.Contains(functionname)) {
                 throw new Exception("Function Name Not Allow : " + functionname);  
@@ -61,6 +63,8 @@ namespace PracticeApi.Util
 
                 string fullPath = "";
                 fullPath = baseDirectory + _configuration.GetSection("appSettings:" + functionname).Value;
+                
+                tempdirname = Encryption.DecryptFileName(tempdirname);
 
                 tempfolderPath += tempdirname;
                 fullPath += dirname;

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace PracticeApi.Models
 {
     [Table("tbl_customers")]
-    public partial class Customer
+    public partial class Customer : BaseModel
     {
         [Column("customer_id")]
         [Key]

@@ -38,6 +38,7 @@ namespace PracticeApi.Controllers
         {
             
             await _repositoryWrapper.Hero.CreateAsync(hero,true);
+            await _repositoryWrapper.EventLog.Insert(hero);
             return CreatedAtAction("getHero",new {id = hero.HeroId}, hero);
         }
 
@@ -59,6 +60,7 @@ namespace PracticeApi.Controllers
                 objHero.HeroAddress = hero.HeroAddress;
                 objHero.HeroSecret = hero.HeroSecret;
                 await _repositoryWrapper.Hero.UpdateAsync(objHero);
+                await _repositoryWrapper.EventLog.Update(objHero);
                 return Ok(objHero);
             }catch(DbUpdateConcurrencyException)
             {
@@ -84,6 +86,7 @@ namespace PracticeApi.Controllers
             {
                 return BadRequest();
             }
+            await _repositoryWrapper.EventLog.Delete(hero);
             await _repositoryWrapper.Hero.DeleteAsync(hero,true);
             return NoContent();
         }

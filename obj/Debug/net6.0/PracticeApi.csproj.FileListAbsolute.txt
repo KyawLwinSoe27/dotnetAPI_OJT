@@ -303,3 +303,8 @@
 /Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/Serilog.Sinks.Console.dll
 /Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/Serilog.Sinks.Debug.dll
 /Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/Serilog.Sinks.File.dll
+/Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/Dapper.dll
+/Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/MailKit.dll
+/Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/MimeKit.dll
+/Volumes/Data Files/ojt_working/backend/PracticeApi/bin/Debug/net6.0/BouncyCastle.Crypto.dll
