@@ -28,5 +28,8 @@ namespace PracticeApi.Models
         [Column("customer_type_id")]
         [Required]
         public int CustomerTypeId { get; set; }
+
+        [NotMapped]
+        public String? Photo { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PracticeApi.Models;
 using PracticeApi.Repositories;
+using PracticeApi.Util;
 
 namespace PracticeApi.Controllers
 {
@@ -40,6 +41,11 @@ namespace PracticeApi.Controllers
                 CustomerTypeId = customerRequest.CustomerTypeId
             };
             await _repositoryWrapper.Customer.CreateAsync(customer,true);
+            if(customerRequest.Photo != null && customerRequest.Photo != "")
+            {
+                FileService.MoveTempFileDir("CustomerPhoto",customer.Id.ToString(),customerRequest.Photo);
+                // FileService.MoveTempFile("CustomerPhoto",customer.Id.ToString(),customerRequest.Photo);
+            }
             return CreatedAtAction(nameof(getCustomerById),new {id = customerRequest.Id},customerRequest );
         }
 
@@ -64,6 +70,12 @@ namespace PracticeApi.Controllers
                 customer.CustomerTypeId = customerRequest.CustomerTypeId;
 
                 await _repositoryWrapper.Customer.UpdateAsync(customer);
+                if(customerRequest.Photo != null && customerRequest.Photo != "")
+                {
+                    // FileService.MoveTempFileDir("CustomerPhoto",customer.Id.ToString(),customerRequest.Photo);
+                    FileService.DeleteFileNameOnly("CustomerPhoto",customer.Id.ToString());
+                    FileService.MoveTempFile("CustomerPhoto",customer.Id.ToString(),customerRequest.Photo);
+                }
                 return Ok(customer);
             }catch(DbUpdateConcurrencyException){
                 if(!isCustomerExists(id))
@@ -83,6 +95,7 @@ namespace PracticeApi.Controllers
             {
                 return BadRequest();
             }
+            FileService.DeleteFileNameOnly("CustomerPhoto",customer.Id.ToString());
             await _repositoryWrapper.Customer.DeleteAsync(customer,true);
             return NoContent();
         }
